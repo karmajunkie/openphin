@@ -11,6 +11,9 @@ class ApplicationController < ActionController::Base
 
   before_filter :login_required, :set_locale
 
+  # iPhone required
+  before_filter :prepare_for_iphone
+  
   layout :choose_layout
   
   cattr_accessor :applications
@@ -151,4 +154,19 @@ class ApplicationController < ActionController::Base
     user.update_attribute(:last_signed_in_at, Time.now)
     super user
   end
+  
+  def iphone_device?
+    if session[:iphone_param]
+      session[:iphone_param] == "1"
+    else
+      request.user_agent =~ /iPhone/
+    end
+  end
+  helper_method :iphone_device?
+  
+  def prepare_for_iphone
+    session[:iphone_param] = params[:iphone] if params[:iphone]
+    request.format = :iphone if iphone_device?
+  end
+
 end

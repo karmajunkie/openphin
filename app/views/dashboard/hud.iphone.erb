@@ -1,0 +1,51 @@
+<div class="current" id="home">
+  <ul class="edgetoedge">
+    <% for alert in @alerts %>
+      <li class="arrow">
+        <%= link_to h(alert.title), "#more_#{alert.id}" %>
+        <%= link_to "Posted at #{alert.created_at.strftime("%B %d, %Y %I:%M %p %Z")}", "#more_#{alert.id}" %>
+        <%= link_to "Status: [#{h alert.status.try(:capitalize)}] Severity: #{h alert.severity} From: #{h alert.sender}", 
+          "#more_#{alert.id}" %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<% for alert in @alerts %>
+  <div id="more_<%= alert.id%>">
+    <div class="toolbar">
+      <a class="back">Back</a>
+      <h1><%=h alert.identifier %></h1>
+    </div>
+    <%= h(alert.title) %>
+    <small>
+      <p><%= "Posted at #{alert.created_at.strftime("%B %d, %Y %I:%M %p %Z")}" %></p>
+      <p>
+        <%= "Status: [#{h alert.status.try(:capitalize)}] Severity: #{h alert.severity} From: #{h alert.sender}" %>
+        <%= "Alert ID: #{h alert.identifier}" %>
+        <%= "Sensitive: #{h(alert.sensitive?) ? 'Yes' : 'No'}" %>
+        <%= "Acknowledge: #{h(alert.acknowledge?) ? 'Yes' : 'No'}" %>
+      </p>
+      <p><%= simple_format h(alert.message) %></p>
+
+      <% unless alert.acknowledged_by_user? %>
+        <% if alert.original_alert.nil? && alert.has_alert_response_messages? %>
+          <% form_for :alert_attempt, :url=>acknowledge_alert_path(alert), :html => {:method => :put} do |form| %> 
+            <%= form.label "call_down_response", "Alert Response" %>
+            <%= form.select("call_down_response", options_for_select(alert.call_down_messages.collect{|k,v|[v,k]}),{:include_blank=>true}) %>
+            <p><%= form.submit "Acknowledge" %></p>
+          <% end %>
+        <% else %>
+          <% if alert.ask_for_acknowledgement? %>
+            <%= button_to 'Acknowledge', acknowledge_alert_path(alert), :method => :put, :rel=>"external" %>
+          <% end %>        
+        <% end %>
+      <% end %>
+
+    </small>
+  </div>
+<% end %>
+
+
+  
+

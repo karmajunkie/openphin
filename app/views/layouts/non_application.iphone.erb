@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+    <%- if protect_against_forgery? -%>
+      <meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
+    <%- end -%>
+    
+    <title>TXPhin Mobile</title>
+    <%= stylesheet_link_tag "/jqtouch/jqtouch.min.css", "/jqtouch/themes/apple/theme.min.css" %>
+    <%= javascript_include_tag "/jqtouch/jquery.1.3.2.min.js", "/jqtouch/jqtouch.min.js", "iphone.js" %>
+  </head>
+  
+  <body>
+    <%= yield %>
+  </body>
+  
+</html>
+

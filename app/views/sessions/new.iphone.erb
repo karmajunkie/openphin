@@ -1,0 +1,26 @@
+<div class="feature">
+
+  <% form_for :session, :url => session_path, :html => {:id => 'sign_in_form'} do |form| %>
+    <ul class='rounded'>
+      <li>
+        <%= form.text_field :email, :value => flash[:email_address], :placeholder=>"Email" -%>  
+      </li>
+      <li>
+        <%= form.password_field :password, :placeholder=>"Password" -%>
+      </li>
+      <li>
+        Remember me<span class="toogle">
+        <%= form.check_box :remember_me -%></span>
+      </li>
+    </ul>
+    <ul>
+    <li class="whiteButton">
+      <%= form.submit "Sign in", :disable_with => "Please wait...",:class=>"submit" -%>
+    </li>
+    </ul>
+  <% end %>
+  <ul>
+    <li><%= link_to "Forgot password?", new_password_path, :rel=>"external" -%></li>
+    <li><%= link_to "Need an account?", new_user_path, :rel=>"external" -%></li>
+  </ul>
+</div>
